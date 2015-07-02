@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include <QString>
 #include <QLabel>
+#include <QTime>
 
 
 
@@ -13,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     player = new QMediaPlayer(this);
     playlist = new QMediaPlaylist(this);
+    duration = 0;
     player->setPlaylist(playlist);
 
     connect(player, &QMediaPlayer::positionChanged, this, &MainWindow::on_positionChanged);
@@ -27,6 +29,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_sliderProgress_sliderMoved(int position)
 {
     player->setPosition(position);
+    time(position/1000);
 }
 
 void MainWindow::on_sliderVolume_sliderMoved(int position)
@@ -36,9 +39,6 @@ void MainWindow::on_sliderVolume_sliderMoved(int position)
 
 void MainWindow::on_pushButton_clicked()
 {
-    //QString filename = QFileDialog::getOpenFileName(this, "Open File", "");
-   // player->setMedia(QUrl::fromLocalFile(filename));
-    //player->play();
     fileNames = QFileDialog::getOpenFileNames(this, "Open Song");
     foreach (QString argument, fileNames) {
         QUrl url(argument);
@@ -74,6 +74,7 @@ void MainWindow::on_durationChanged(qint64 position)
 void MainWindow::on_positionChanged(qint64 position)
 {
     ui->sliderProgress->setValue(position);
+    time(position/1000);
 }
 
 void MainWindow::on_listWidget_activated(const QModelIndex &index)
@@ -101,7 +102,16 @@ void MainWindow::on_pushButton_7_clicked()
 
 void MainWindow::on_pushButton_8_clicked()
 {
-    //
     playlist->clear();
     ui->listWidget->clear();
+}
+
+void MainWindow::time(quint64 info)
+{
+    QString tStr;
+    QTime currentTime(0,(info/60)%60, info%60);
+    QString format = "mm:ss";
+    tStr = currentTime.toString(format);
+
+    ui->label_3->setText(tStr);
 }

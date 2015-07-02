@@ -47,12 +47,15 @@ private slots:
 
     void on_pushButton_8_clicked();
 
+    void time(quint64 info);
+
 private:
     Ui::MainWindow *ui;
     QMediaPlayer * player;
     QMediaPlaylist * playlist;
     QStringList fileNames;
     int total;
+    quint64 duration;
 };
 
 #endif // MAINWINDOW_H
